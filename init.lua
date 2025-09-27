@@ -33,6 +33,4 @@ config.setup({  ensure_installed = {"lua", "javascript", "c", "rust", "markdown"
   indent = { enable = true },
 })
 
-require("catppuccin").setup()
-vim.cmd.colorscheme "catppuccin"
 
