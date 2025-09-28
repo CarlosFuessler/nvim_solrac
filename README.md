@@ -1,43 +1,38 @@
-# 🚀 Mein Neovim-Setup
+# Neovim Configuration
 
-Willkommen zu meiner persönlichen Neovim-Konfiguration, die mit dem schnellen und effizienten Plugin-Manager `lazy.nvim` verwaltet wird. Dieses Setup ist so konzipiert, dass es eine minimalistische, aber leistungsstarke Entwicklungsumgebung bietet, die eine schnelle Navigation und ein angenehmes Coderlebnis ermöglicht.
-
-# 🔥 Mein Neovim-Setup
-
-Willkommen zu meiner Neovim-Konfiguration! Dieses Setup wurde mit `lazy.nvim` gebaut und ist optimiert für blitzschnelles und angenehmes Coden.
+This Neovim configuration is managed by **Lazy.nvim**, designed for a minimal yet efficient development environment.
 
 ---
 
-### ✨ Features, die rocken:
+### Features
 
-* **Catppuccin Theme**: Das ultimative Farbschema für coole Vibes.
-* **Smooth Cursor**: `smear-cursor.nvim` für eine flüssige Cursor-Animation, die einfach Spaß macht.
-* **Auto-Formatting**: Dein Code bleibt immer sauber.
-* **Git-Power**: Volle Kontrolle über Git, direkt im Editor.
-* **Fuzzy Finding**: Mit `telescope` findest du alles in Sekunden.
-* **LSP & Treesitter**: Intelligente Vervollständigung, Fehlerprüfung und brillante Syntax-Highlights.
-* **Navigation**: `neotree` macht die Navigation durch dein Projekt zum Kinderspiel.
+* **Catppuccin Theme**: An aesthetically pleasing color palette.
+* **Smear Cursor**: An animated cursor for improved visual feedback.
+* **Auto-Formatting**: Ensures consistent code formatting.
+* **Git Integration**: Seamless Git functionality within the editor.
+* **Fuzzy Finding**: Fast file and content navigation with **Telescope**.
+* **LSP & Treesitter**: Provides intelligent code analysis and precise syntax highlighting.
+* **File Navigation**: Efficient project exploration with **Neotree**.
 
 ---
 
-### ⚙️ Installation
+### Installation
 
-#### Was du brauchst:
+#### Prerequisites
 
-* **Neovim v0.9.0+**
-* **Git**
+* Neovim v0.9.0+
+* Git
 
-#### So geht's:
+#### Steps
 
-1.  Klone das Repo:
+1.  Clone the repository:
     ```bash
-    git clone [https://github.com/DEIN-USERNAME/DEIN-REPO.git](https://github.com/DEIN-USERNAME/DEIN-REPO.git) ~/.config/nvim
+    git clone [https://github.com/YOUR-USERNAME/YOUR-REPO.git](https://github.com/YOUR-USERNAME/YOUR-REPO.git) ~/.config/nvim
     ```
-2.  Starte Neovim. Lazy.nvim erledigt den Rest!
+2.  Launch Neovim to trigger automatic plugin installation.
 
 ---
 
-### 🛠️ Anpassung
+### Configuration
 
-Passt es dir nicht? Alle Konfigurationen findest du in den `.lua`-Dateien unter `~/.config/nvim/lua/plugins/`. Einfach anpassen und loslegen!
-
+All plugin settings are located in the **`.lua`** files under **`~/.config/nvim/lua/plugins/`**.
