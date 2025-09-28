@@ -27,7 +27,7 @@ This Neovim configuration is managed by **Lazy.nvim**, designed for a minimal ye
 
 1.  Clone the repository:
     ```bash
-    git clone [https://github.com/YOUR-USERNAME/YOUR-REPO.git](https://github.com/YOUR-USERNAME/YOUR-REPO.git) ~/.config/nvim
+    git clone https://github.com/CarlosFuessler/nvim_solrac ~/.config/nvim
     ```
 2.  Launch Neovim to trigger automatic plugin installation.
 
