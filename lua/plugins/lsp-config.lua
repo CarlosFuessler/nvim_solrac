@@ -1,12 +1,12 @@
 return {
-  -- Mason Installer
+  -- Mason: Installer
   {
     "williamboman/mason.nvim",
     build = ":MasonUpdate",
     config = true,
   },
 
-  -- Mason nur als Paket-Installer
+  -- Mason LSP Brücke
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
@@ -26,13 +26,13 @@ return {
     end,
   },
 
-  -- Native LSP ohne lspconfig
+  -- Native LSP mit neuer API
   {
-    "neovim/nvim-lspconfig", -- nur wegen mason-lspconfig als dep
+    "neovim/nvim-lspconfig",
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Diagnostics
+      -- Diagnostics Config
       vim.diagnostic.config({
         virtual_text = false,
         signs = true,
@@ -41,6 +41,7 @@ return {
         severity_sort = true,
       })
 
+      -- Popup bei CursorHold
       vim.api.nvim_create_autocmd("CursorHold", {
         callback = function()
           vim.diagnostic.open_float(nil, {
@@ -52,7 +53,7 @@ return {
         end,
       })
 
-      -- Keymaps
+      -- Keymaps wenn LSP attached
       local on_attach = function(_, bufnr)
         local opts = { buffer = bufnr, noremap = true, silent = true }
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -66,24 +67,31 @@ return {
         end, opts)
       end
 
-      -- Helper: Server starten
+      -- Hilfsfunktion zum Starten eines Servers
       local function start_server(name, cmd, filetypes, settings)
-        if not vim.lsp.configs[name] then
-          vim.lsp.configs[name] = {
-            default_config = {
-              cmd = cmd,
-              filetypes = filetypes,
-              root_dir = vim.fs.dirname(vim.fs.find({ ".git", ".luarc.json", "package.json" }, { upward = true })[1]),
-              capabilities = capabilities,
-              on_attach = on_attach,
-              settings = settings or {},
-            },
-          }
+        local root_dir = function(fname)
+          return vim.fs.dirname(
+            vim.fs.find({ ".git", "package.json", ".luarc.json", "pyproject.toml" }, {
+              upward = true,
+              path = fname,
+            })[1]
+          ) or vim.loop.cwd()
         end
-        vim.lsp.start(vim.lsp.configs[name].default_config)
+
+        local config = {
+          name = name,
+          cmd = cmd,
+          filetypes = filetypes,
+          root_dir = root_dir(vim.api.nvim_buf_get_name(0)),
+          capabilities = capabilities,
+          on_attach = on_attach,
+          settings = settings or {},
+        }
+
+        vim.lsp.start(config)
       end
 
-      -- Server definieren
+      -- Server starten
       start_server("lua_ls", { "lua-language-server" }, { "lua" }, {
         Lua = { diagnostics = { globals = { "vim" } } },
       })
@@ -96,20 +104,15 @@ return {
       })
 
       start_server("rust_analyzer", { "rust-analyzer" }, { "rust" })
-
       start_server("pyright", { "pyright-langserver", "--stdio" }, { "python" })
-
       start_server("clangd", { "clangd" }, { "c", "cpp", "objc", "objcpp" })
-
       start_server("marksman", { "marksman", "server" }, { "markdown" })
-
       start_server("jsonls", { "vscode-json-language-server", "--stdio" }, { "json" })
-
       start_server("bashls", { "bash-language-server", "start" }, { "sh", "bash" })
     end,
   },
 
-  -- Autocompletion
+  -- Autocompletion mit Snippets
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
