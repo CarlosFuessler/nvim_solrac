@@ -27,10 +27,3 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 
 vim.keymap.set('n' , '<C-n>', ':Neotree filesystem reveal left<CR>', {})
 
-local config = require("nvim-treesitter.configs")
-config.setup({  ensure_installed = {"lua", "javascript", "c", "rust", "markdown"},
-  highlight = { enable = true },
-  indent = { enable = true },
-})
-
-
