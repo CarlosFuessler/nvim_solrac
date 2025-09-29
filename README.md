@@ -4,17 +4,21 @@ This Neovim configuration is managed by **Lazy.nvim**, designed for a minimal ye
 
 ---
 
-### Features
+```bash
 
-* **Catppuccin Theme**: An aesthetically pleasing color palette.
-* **Smear Cursor**: An animated cursor for improved visual feedback.
-* **Auto-Formatting**: Ensures consistent code formatting.
-* **Git Integration**: Seamless Git functionality within the editor.
-* **Fuzzy Finding**: Fast file and content navigation with **Telescope**.
-* **LSP & Treesitter**: Provides intelligent code analysis and precise syntax highlighting.
-* **File Navigation**: Efficient project exploration with **Neotree**.
+- **Catppuccin Theme** – Aesthetically pleasing color palette.
+- **Smear Cursor** – Animated cursor for improved visual feedback.
+- **Auto-formatting** – Ensures consistent code formatting.
+- **Git Integration** – Git functionality inside Neovim.
+- **Fuzzy Finding** – Fast file and content navigation with **Telescope**.
+- **LSP & Treesitter** – Intelligent code analysis and precise syntax highlighting.
+- **File Navigation** – Efficient project exploration with **Neo-tree**.
+- **Markdown Preview** – Live preview for Markdown files in the browser.
+- **Todo Comments** – Highlight and navigate `TODO`, `FIXME`, etc.
+- **Alpha** – Startup screen with useful shortcuts.
+- **Scrollbar** – Minimal scrollbar with highlights.
 
----
+```
 
 ### Installation
 
