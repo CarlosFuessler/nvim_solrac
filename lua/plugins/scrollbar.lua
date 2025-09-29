@@ -2,9 +2,8 @@ return {
 	"petertriho/nvim-scrollbar",
 	event = "BufReadPost",
 	dependencies = {
-		"kevinhwang91/nvim-hlslens", -- bessere Suche
-		"lewis6991/gitsigns.nvim", -- Git-Integration
-		"folke/todo-comments.nvim", -- TODO-Integration
+		"kevinhwang91/nvim-hlslens",
+		"lewis6991/gitsigns.nvim",
 	},
 	config = function()
 		local scrollbar = require("scrollbar")
@@ -13,14 +12,13 @@ return {
 			show = true,
 			set_highlights = true,
 			handlers = {
-				cursor = true, -- Cursor-Position
-				diagnostic = true, -- LSP-Fehler/Warnungen
-				gitsigns = true, -- Git-Diffs
-				search = true, -- / und * Suchmatches
+				cursor = true,
+				diagnostic = true,
+				gitsigns = true,
+				search = true,
 			},
 		})
 
-		-- 🔍 Integration mit hlslens (Such-Highlight)
 		local hlslens = require("hlslens")
 		local kopts = { noremap = true, silent = true }
 
