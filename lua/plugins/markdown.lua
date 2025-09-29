@@ -6,6 +6,6 @@ return {
 		vim.fn["mkdp#util#install"]()
 	end,
 	config = function()
-		vim.g.mkdp_theme = "dark" -- Set the theme to dark
+		vim.g.mkdp_theme = "dark" -- oder "light"
 	end,
 }
