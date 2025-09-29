@@ -1,169 +1,142 @@
 return {
-  -- Mason: Installer
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-    config = true,
-  },
+	"neovim/nvim-lspconfig",
+	event = { "BufReadPre", "BufNewFile" },
+	dependencies = {
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+		"hrsh7th/cmp-nvim-lsp",
+		"hrsh7th/cmp-buffer",
+		"hrsh7th/cmp-path",
+		"hrsh7th/cmp-cmdline",
+		"hrsh7th/nvim-cmp",
+		"L3MON4D3/LuaSnip",
+		"saadparwaiz1/cmp_luasnip",
+		"j-hui/fidget.nvim",
+		"jay-babu/mason-nvim-dap.nvim", -- Add this line
+		"mfussenegger/nvim-dap", -- And this line
+	},
 
-  -- Mason LSP Brücke
-  {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "rust_analyzer",
-          "pyright",
-          "clangd",
-          "marksman",
-          "jsonls",
-          "bashls",
-        },
-        automatic_installation = true,
-      })
-    end,
-  },
+	config = function()
+		local cmp = require("cmp")
+		local cmp_lsp = require("cmp_nvim_lsp")
+		local capabilities = vim.tbl_deep_extend(
+			"force",
+			{},
+			vim.lsp.protocol.make_client_capabilities(),
+			cmp_lsp.default_capabilities()
+		)
+		require("fidget").setup({})
+		require("mason").setup({})
+		require("mason-nvim-dap").setup({
+			ensure_installed = {
+				"codelldb",
+			},
+		})
+		require("mason-lspconfig").setup({
+			ensure_installed = {
+				"lua_ls",
+				"rust_analyzer",
+				-- "ltex_ls",
+				"gopls",
+				"clangd",
+				"cmake",
+			},
+			handlers = {
+				function(server_name) -- default handler (optional)
+					require("lspconfig")[server_name].setup({
+						capabilities = capabilities,
+					})
+				end,
+				ltex = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.ltex.setup({
+						settings = {
+							ltex = {
+								enabled = { "markdown", "org", "tex" },
+								language = "en-US",
+							},
+						},
+					})
+					-- create command to set language to english
+					vim.cmd([[
+                    command! -nargs=0 LtexEnglish :lua require("lspconfig").ltex.setup({settings = {ltex = {enabled = { "markdown", "org", "tex" },language = "en-US",},}})
+                    ]])
+					vim.cmd([[
+                    command! -nargs=0 LtexGerman :lua require("lspconfig").ltex.setup({settings = {ltex = {enabled = { "markdown", "org", "tex" },language = "de-DE",},}})
+                    ]])
+				end,
+				cmake = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.cmake.setup({
+						settings = {
+							CMake = {
+								filetypes = { "cmake", "CMakeLists.txt" },
+							},
+						},
+					})
+				end,
+				zls = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.zls.setup({
+						root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
+						settings = {
+							zls = {
+								enable_inlay_hints = true,
+								enable_snippets = true,
+								warn_style = true,
+							},
+						},
+					})
+					vim.g.zig_fmt_parse_errors = 0
+					vim.g.zig_fmt_autosave = 0
+				end,
+				["lua_ls"] = function()
+					local lspconfig = require("lspconfig")
+					lspconfig.lua_ls.setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								runtime = { version = "Lua 5.1" },
+								diagnostics = {
+									globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+								},
+							},
+						},
+					})
+				end,
+			},
+		})
 
-  -- Native LSP mit neuer API
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-      -- Diagnostics Config
-      vim.diagnostic.config({
-        virtual_text = false,
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-      })
-
-      -- Popup bei CursorHold
-      vim.api.nvim_create_autocmd("CursorHold", {
-        callback = function()
-          vim.diagnostic.open_float(nil, {
-            focusable = false,
-            border = "rounded",
-            source = "always",
-            prefix = " ",
-          })
-        end,
-      })
-
-      -- Keymaps wenn LSP attached
-      local on_attach = function(_, bufnr)
-        local opts = { buffer = bufnr, noremap = true, silent = true }
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-        vim.keymap.set("n", "<leader>f", function()
-          vim.lsp.buf.format({ async = true })
-        end, opts)
-      end
-
-      -- Hilfsfunktion zum Starten eines Servers
-      local function start_server(name, cmd, filetypes, settings)
-        local root_dir = function(fname)
-          return vim.fs.dirname(
-            vim.fs.find({ ".git", "package.json", ".luarc.json", "pyproject.toml" }, {
-              upward = true,
-              path = fname,
-            })[1]
-          ) or vim.loop.cwd()
-        end
-
-        local config = {
-          name = name,
-          cmd = cmd,
-          filetypes = filetypes,
-          root_dir = root_dir(vim.api.nvim_buf_get_name(0)),
-          capabilities = capabilities,
-          on_attach = on_attach,
-          settings = settings or {},
-        }
-
-        vim.lsp.start(config)
-      end
-
-      -- Server starten
-      start_server("lua_ls", { "lua-language-server" }, { "lua" }, {
-        Lua = { diagnostics = { globals = { "vim" } } },
-      })
-
-      start_server("ts_ls", { "typescript-language-server", "--stdio" }, {
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-      })
-
-      start_server("rust_analyzer", { "rust-analyzer" }, { "rust" })
-      start_server("pyright", { "pyright-langserver", "--stdio" }, { "python" })
-      start_server("clangd", { "clangd" }, { "c", "cpp", "objc", "objcpp" })
-      start_server("marksman", { "marksman", "server" }, { "markdown" })
-      start_server("jsonls", { "vscode-json-language-server", "--stdio" }, { "json" })
-      start_server("bashls", { "bash-language-server", "start" }, { "sh", "bash" })
-    end,
-  },
-
-  -- Autocompletion mit Snippets
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-      "L3MON4D3/LuaSnip",
-      "rafamadriz/friendly-snippets",
-    },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-
-      require("luasnip.loaders.from_vscode").lazy_load()
-
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-              cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-        }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
-        }),
-      })
-    end,
-  },
+		local cmp_select = { behavior = cmp.SelectBehavior.Select }
+		cmp.setup({
+			snippet = {
+				expand = function(args)
+					require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+				end,
+			},
+			mapping = cmp.mapping.preset.insert({
+				["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+				["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+				["<C-a>"] = cmp.mapping.confirm({ select = true }),
+				["<C-Space>"] = cmp.mapping.complete(),
+			}),
+			sources = cmp.config.sources({
+				{ name = "nvim_lsp" },
+				{ name = "luasnip" }, -- For luasnip users.
+			}, {
+				{ name = "buffer" },
+			}),
+		})
+		vim.diagnostic.config({
+			-- update_in_insert = true,
+			float = {
+				focusable = false,
+				style = "minimal",
+				border = "rounded",
+				source = "always",
+				header = "",
+				prefix = "",
+			},
+		})
+	end,
 }
