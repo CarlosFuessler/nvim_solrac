@@ -17,6 +17,7 @@ return {
 	},
 
 	config = function()
+		vim.diagnostic.config({ virtual_text = true })
 		local cmp = require("cmp")
 		local cmp_lsp = require("cmp_nvim_lsp")
 		local capabilities = vim.tbl_deep_extend(
@@ -40,7 +41,9 @@ return {
 				"gopls",
 				"clangd",
 				"cmake",
+				"zls",
 			},
+
 			handlers = {
 				function(server_name) -- default handler (optional)
 					require("lspconfig")[server_name].setup({
@@ -65,6 +68,7 @@ return {
                     command! -nargs=0 LtexGerman :lua require("lspconfig").ltex.setup({settings = {ltex = {enabled = { "markdown", "org", "tex" },language = "de-DE",},}})
                     ]])
 				end,
+
 				cmake = function()
 					local lspconfig = require("lspconfig")
 					lspconfig.cmake.setup({

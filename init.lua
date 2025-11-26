@@ -25,5 +25,16 @@ local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<C-p>", builtin.find_files, {})
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
 
+vim.keymap.set("i", "<Tab>", function()
+	local copilot = require("copilot.suggestion")
+	if copilot.is_visible() then
+		vim.cmd("undojoin") -- Optional, ensures the action is part of the same undo group
+		copilot.accept()
+	else
+		-- Insert a normal tab
+		return "\t"
+	end
+end, { noremap = true, silent = true, expr = true })
+
 vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<CR>", {})
 vim.api.nvim_set_keymap("n", "Y", "yy", { noremap = true })

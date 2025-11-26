@@ -7,12 +7,7 @@ return {
 		suggestion = {
 			enabled = not vim.g.ai_cmp,
 			auto_trigger = true,
-			keymap = {
-				-- Diese Zeilen kannst du hinzufügen oder anpassen
-				accept = "<leader>ca", -- Copilot-Vorschlag mit <leader>ca akzeptieren
-				next = "<leader>cn", -- Nächsten Vorschlag mit <leader>cn anzeigen
-				prev = "<leader>cp", -- Vorherigen Vorschlag mit <leader>cp anzeigen
-			},
+			keymap = {},
 		},
 		panel = { enabled = false },
 		filetypes = {
@@ -21,4 +16,16 @@ return {
 			golang = false,
 		},
 	},
+	setup = function()
+		vim.keymap.set("i", "<Tab>", function()
+			local copilot = require("copilot.suggestion")
+			if copilot.is_visible() then
+				vim.cmd("undojoin") -- Optional, ensures the action is part of the same undo group
+				copilot.accept()
+			else
+				-- Insert a normal tab
+				return "\t"
+			end
+		end, { noremap = true, silent = true, expr = true })
+	end,
 }
