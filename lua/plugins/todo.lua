@@ -3,11 +3,11 @@ return {
 	dependencies = { "nvim-lua/plenary.nvim" },
 	config = function()
 		require("todo-comments").setup({
-			-- Optionen kannst du hier anpassen
-			signs = true, -- zeigt Symbole im Signcolumn
+
+			signs = true,
 			highlight = {
-				keyword = "bg", -- hebt Hintergrund hervor
-				after = "", -- kein extra Text highlighten
+				keyword = "bg",
+				after = "",
 			},
 		})
 	end,

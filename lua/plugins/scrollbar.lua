@@ -39,7 +39,6 @@ return {
 		vim.keymap.set("n", "g*", [[g*<Cmd>lua require('hlslens').start()<CR>]], kopts)
 		vim.keymap.set("n", "g#", [[g#<Cmd>lua require('hlslens').start()<CR>]], kopts)
 
-		-- 🌈 Catppuccin-Integration
 		pcall(function()
 			require("catppuccin").setup_integrations({
 				scrollbar = true,

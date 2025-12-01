@@ -7,11 +7,10 @@ return {
 	opts = function()
 		local lualine_mode = function()
 			local mode = vim.fn.mode()
-			local mode_icon = "" -- Standard-Icon: Ein Symbol, das einen Modus darstellt
+			local mode_icon = ""
 			local mode_text = "NORMAL"
-			local mode_color = "#8A8A8A" -- Standardfarbe
+			local mode_color = "#8A8A8A"
 
-			-- Du kannst hier die Icons direkt aus dem Nerd Fonts Cheat Sheet kopieren und einfügen
 			if mode == "n" then
 				mode_icon = "󰈈" -- Neovim-Logo
 				mode_text = "NORMAL"
@@ -42,13 +41,9 @@ return {
 				mode_color = "#808080" -- Grau
 			end
 
-			-- Rückgabe des formatierten Strings
 			return " " .. mode_icon .. " " .. mode_text .. " "
 		end
 
-		-- Der Rest deiner Konfiguration bleibt gleich, da die Icons
-		-- für `lualine_c` (filename), `lualine_b` (diff) etc. von `nvim-web-devicons`
-		-- bereitgestellt werden, das bereits mit Nerd Fonts kompatibel ist.
 		local function get_diagnostics()
 			local icons = require("nvim-web-devicons")
 			local lsp_status = require("lsp-status")
@@ -76,22 +71,21 @@ return {
 				table.insert(result, " " .. lsp_name) -- Icon für LSP-Status
 			end
 			if error_count > 0 then
-				table.insert(result, " " .. error_count) -- Fehler-Icon
+				table.insert(result, " " .. error_count)
 			end
 			if warn_count > 0 then
-				table.insert(result, " " .. warn_count) -- Warn-Icon
+				table.insert(result, " " .. warn_count)
 			end
 			if info_count > 0 then
-				table.insert(result, " " .. info_count) -- Info-Icon
+				table.insert(result, " " .. info_count)
 			end
 			if hint_count > 0 then
-				table.insert(result, " " .. hint_count) -- Hint-Icon
+				table.insert(result, " " .. hint_count)
 			end
 
 			return table.concat(result, " | ")
 		end
 
-		-- Deine gesamte Lualine-Tabelle
 		return {
 			options = {
 				theme = "auto",

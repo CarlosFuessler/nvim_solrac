@@ -11,8 +11,6 @@ return {
 	{ "bluz71/vim-moonfly-colors", lazy = true, name = "moonfly" },
 	{ "projekt0n/github-nvim-theme", lazy = true, name = "github" },
 	{ "savq/melange-nvim", lazy = true, name = "melange" },
-
-	-- Gut gepflegte Alternativen und weitere Optionen
 	{ "shaunsingh/nord.nvim", lazy = true, name = "nord" },
 	{ "ayu-theme/ayu-vim", lazy = true, name = "ayu" },
 	{ "fenetikm/falcon", lazy = true, name = "falcon" },

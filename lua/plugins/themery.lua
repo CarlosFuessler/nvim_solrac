@@ -31,7 +31,7 @@ return {
 				{ name = "Rosé Pine", colorscheme = "rose-pine" },
 				{ name = "Everforest", colorscheme = "everforest" },
 				{ name = "Moonfly", colorscheme = "moonfly" },
-				{ name = "GitHub", colorscheme = "github_dark" }, -- Spezieller Name für dieses Theme
+				{ name = "GitHub", colorscheme = "github_dark" },
 				{ name = "Nord", colorscheme = "nord" },
 				{ name = "Melange", colorscheme = "melange" },
 				{ name = "Ayu", colorscheme = "ayu" },

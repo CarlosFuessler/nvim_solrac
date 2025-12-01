@@ -12,8 +12,8 @@ return {
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"j-hui/fidget.nvim",
-		"jay-babu/mason-nvim-dap.nvim", -- Add this line
-		"mfussenegger/nvim-dap", -- And this line
+		"jay-babu/mason-nvim-dap.nvim",
+		"mfussenegger/nvim-dap",
 	},
 
 	config = function()
@@ -37,7 +37,6 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"rust_analyzer",
-				-- "ltex_ls",
 				"gopls",
 				"clangd",
 				"cmake",
@@ -45,7 +44,7 @@ return {
 			},
 
 			handlers = {
-				function(server_name) -- default handler (optional)
+				function(server_name)
 					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
 					})
@@ -60,7 +59,7 @@ return {
 							},
 						},
 					})
-					-- create command to set language to english
+
 					vim.cmd([[
                     command! -nargs=0 LtexEnglish :lua require("lspconfig").ltex.setup({settings = {ltex = {enabled = { "markdown", "org", "tex" },language = "en-US",},}})
                     ]])
@@ -115,7 +114,7 @@ return {
 		cmp.setup({
 			snippet = {
 				expand = function(args)
-					require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+					require("luasnip").lsp_expand(args.body)
 				end,
 			},
 			mapping = cmp.mapping.preset.insert({
@@ -126,13 +125,13 @@ return {
 			}),
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" },
-				{ name = "luasnip" }, -- For luasnip users.
+				{ name = "luasnip" },
 			}, {
 				{ name = "buffer" },
 			}),
 		})
 		vim.diagnostic.config({
-			-- update_in_insert = true,
+
 			float = {
 				focusable = false,
 				style = "minimal",
